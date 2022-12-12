@@ -186,6 +186,27 @@
     }
   };
 
+  macro('checkDate', function (
+    $date,
+    $month = null,
+    $day = null
+) {
+    if (!is_null($day)) {
+        $date = "{$date}-{$month}-{$day}";
+    }
+
+    $parsed = date_parse($date);
+
+    return $parsed['error_count'] == 0 &&
+        ($parsed['warning_count'] == 0 ||
+            !in_array(
+                'The parsed date was invalid',
+                $parsed['warnings'],
+            ));
+});
+
+
+
   const downloadDefault = (source, filename) => {
     const fs = require('fs');
     const path = require('path');
