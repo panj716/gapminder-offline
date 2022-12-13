@@ -143,18 +143,34 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
       e.setAttribute('data-exclude-element-select', '.vzb-noexport');
       document.body.appendChild(e);
     },
+    execute(methodName: string, ...params) {
+      if (params && params.length > 0) {
+        const methodWithParams = `${methodName}@${JSON.stringify(params)}`;
+        this.onMenuItemSelected.emit(methodWithParams);
+        return;
+      }
+  
+      this.onMenuItemSelected.emit(methodName);
+    },
     checkForUpdates: () => {
       context.es.shell.openExternal('https://vizabi.org/gapminder-offline-version-archive.html');
       context.isMenuOpened = false;
+    },
+    areChartsAvailable(): boolean {
+      return this.chartService.areChartsAvailable(this.tabsModel);
     },
     openDevTools: () => {
       context.isMenuOpened = false;
       es.ipcRenderer.send(globConst.OPEN_DEV_TOOLS);
     },
+    getCurrentTab(): TabModel {
+      return this.chartService.getCurrentTab(this.tabsModel);
+    },
     reload: () => {
       context.isMenuOpened = false;
       es.ipcRenderer.send(globConst.RELOAD_MAIN_WINDOW);
     },
+    
     setLanguage: (langPar) => {
       context.isMenuOpened = false;
 
@@ -164,6 +180,7 @@ export const getMenuActions = (context: HomeComponent, es: ElectronService) => {
 
       context.ls.currentLanguage = context.ls.getLanguageById(langPar[0]);
       context.translate.setDefaultLang(context.ls.currentLanguage.id);
+      context.additional-data-item.descriptor.translate.setDefaultLang(context.ls.currentLanguage.id);
     }
   };
 };
