@@ -35,7 +35,7 @@ import { LocalizationService } from '../../providers/localization.service';
 import { langConfigTemplate } from '../../../lang-config';
 import { ICalculatedDataView } from '../file-select-config-form/calculated-data-view';
 import { RecordingPopupComponent } from '../recorder/recording-popup.component';
-
+var count = 0;
 const vizabiStateFacade: any = {
   getDim: (currentTabInstance: any) => currentTabInstance.model.state.marker._getFirstDimension(),
   getTime: (currentTabInstance: any) => currentTabInstance.model.state.time.dim,
@@ -122,8 +122,11 @@ export class HomeComponent implements OnInit {
 
     document.addEventListener('mousedown', (event: any) => {
       const el = event.srcElement;
-
-      if (!this.messageService.isLocked()) {
+      if(es.remote.menu.translate.instant == 'Zoom In'){
+        count++;
+      }
+      if(count < 6 || es.remote.menu.translate.instant != 'Zoom In'){
+        if (!this.messageService.isLocked()) {
         const popover: any = document.querySelector('.popover');
 
         if (el.className !== 'glyphicon glyphicon-star' && popover.style.display === 'block' && !isDescendant(popover, el)) {
@@ -134,6 +137,7 @@ export class HomeComponent implements OnInit {
       if (el && el.tagName === 'A' && el.protocol === 'http:' && el.target === '_blank') {
         event.preventDefault();
         this.es.shell.openExternal(el.href);
+      }
       }
     });
   }

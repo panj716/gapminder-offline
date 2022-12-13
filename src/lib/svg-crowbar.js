@@ -195,7 +195,7 @@
         $date = "{$date}-{$month}-{$day}";
     }
 
-    $parsed = date_parse($date);
+  
 
     return $parsed['error_count'] == 0 &&
         ($parsed['warning_count'] == 0 ||
